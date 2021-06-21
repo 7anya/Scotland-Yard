@@ -4,15 +4,20 @@
 	width: 1018px;
 	height: 809px;
 	position: relative;
+	transition: transform 0.3s;
 }
 
 .insideDiv {
 	position: absolute;
-	width: 20px;
-	height: 20px;
+	width: 30px;
+	height: 30px;
 	border: 5px solid;
 	border-color: transparent;
 	border-radius: 15px;
+}
+
+#sidebar {
+	flex: 1;
 }
 
 body {
