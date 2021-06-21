@@ -104,7 +104,7 @@ class Player {
 		return false;
 	}
 
-	makeMove(ticket, location, mrx, gameID) {
+	makeMove(ticket, location, mrx, gameID, isDouble) {
 		switch (ticket) {
 			case 'T':
 				this.taxi--;
@@ -122,7 +122,7 @@ class Player {
 				this.black--;
 				break;
 		}
-		this.moves.push(new Move(location, ticket));
+		this.moves.push(new Move(location, (isDouble ? '2' : '') + ticket));
 
 		if (this.isMrX) {
 			length = this.moves.length;
@@ -133,8 +133,11 @@ class Player {
 				length == 18 ||
 				length == 24
 			) {
-				io.to(gameID).emit('MrX_moves', this.moves);
+				io.to(gameID).emit('MrX_reveal', this.moves);
 			}
+			arr = [];
+			this.moves.forEach((move) => arr.push(move.ticket));
+			io.to(gameID).emit('MrX_moves', arr);
 		} else {
 			io.to(gameID).emit('player_moves', this);
 		}
@@ -202,20 +205,23 @@ class Game {
 					ticket,
 					location,
 					this.players[this.mrx],
-					this.gameID
+					this.gameID,
+					false
 				);
 			} else {
 				player.makeMove(
 					ticket[1],
 					location[0],
 					this.players[this.mrx],
-					this.gameID
+					this.gameID,
+					true
 				);
 				player.makeMove(
 					ticket[2],
 					location[1],
 					this.players[this.mrx],
-					this.gameID
+					this.gameID,
+					true
 				);
 			}
 			if (
