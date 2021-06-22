@@ -298,3 +298,14 @@ function ScrollZoom(container, max_scale, factor) {
 		);
 	}
 }
+
+function handleClick(cb) {
+	if (cb.checked) {
+		$('#messageBox').show();
+		$('#mrxBoard').hide();
+	} else {
+		$('#messageBox').hide();
+		$('#mrxBoard').show();
+	}
+	//console.log('Clicked, new value = ' + cb.checked);
+}

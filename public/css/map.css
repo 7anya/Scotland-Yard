@@ -16,6 +16,61 @@
 	border-radius: 15px;
 }
 
+#messageBox {
+	border: 3px solid;
+	border-color: #0275d8;
+	border-radius: 5px;
+	width: 100%;
+	padding: 20px;
+	margin-top: 30px;
+	max-height: 396px;
+	overflow: scroll;
+}
+
+#message {
+	background-color: rgba(2, 117, 216, 0.6);
+	padding: 10px;
+	border-radius: 5px;
+}
+
+#chooseBox {
+	border: 3px solid;
+	border-color: #0275d8;
+	border-radius: 5px;
+	width: 100%;
+	padding: 20px;
+	margin-top: 30px;
+}
+
+#mrxBoard {
+	display: none;
+	border: 3px solid;
+	border-color: #0275d8;
+	border-radius: 5px;
+	padding: 5px;
+	margin-top: 30px;
+	width: 100%;
+	position: relative;
+}
+
+#testBox1 {
+	position: absolute;
+	top: 23px;
+	left: 79px;
+}
+
+#testBox2 {
+	position: absolute;
+	top: 69px;
+	left: 79px;
+}
+
+#testBox3 {
+	position: absolute;
+	top: 23px;
+	left: 195px;
+}
+
 #sidebar {
 	flex: 1;
 }

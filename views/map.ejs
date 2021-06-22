@@ -13,40 +13,147 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<div  style="display: flex;">
-            <div id="main" style="overflow:hidden;">
-                <div id="mainDiv"></div>
-            </div>
-			
+		<div style="display: flex">
+			<div id="main" style="overflow: hidden">
+				<div id="mainDiv"></div>
+			</div>
+
 			<div id="sidebar">
 				<div class="container">
 					<div
 						class="row align-items-center justify-content-md-center"
 						style="height: 100%"
 					>
-						
-							<div class="container">
-								<div
-									class="
-										row
-										align-items-center
-										justify-content-md-center
-									"
-								><div class="col-md-auto"><h1>Scotland Yard</h1></div></div>
-                                <div
-									class="
-										row
-										align-items-center
-										justify-content-md-center
-									"
-								><div class="col-md-auto"><button class="btn btn-primary">
-								Click me if you boredd
-							</button></div>
-                            
-                            </div>
+						<div class="container">
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-auto">
+									<h1>Scotland Yard</h1>
+								</div>
 							</div>
-							
-							
+
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-12">
+									<div id="chooseBox">
+										<h4>Yayyy It's your turn</h4>
+										<div class="btn-group">
+											<button
+												type="button"
+												class="
+													btn btn-danger
+													dropdown-toggle
+												"
+												data-bs-toggle="dropdown"
+												aria-expanded="false"
+											>
+												Choose Action
+											</button>
+											<ul class="dropdown-menu">
+												<li>
+													<a
+														class="dropdown-item"
+														href="#"
+														>Take Bus to 8</a
+													>
+												</li>
+												<li>
+													<a
+														class="dropdown-item"
+														href="#"
+														>Take Taxi to 5</a
+													>
+												</li>
+												<li>
+													<a
+														class="dropdown-item"
+														href="#"
+														>Something else here</a
+													>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-auto">
+									<div
+										class="form-check form-switch"
+										style="margin-top: 10px"
+									>
+										<input
+											class="form-check-input"
+											type="checkbox"
+											id="flexSwitchCheckChecked"
+											checked
+											onclick="handleClick(this);"
+										/>
+										<label
+											class="form-check-label"
+											for="flexSwitchCheckChecked"
+											>Message Logs</label
+										>
+									</div>
+								</div>
+							</div>
+
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-auto">
+									<div id="mrxBoard">
+										<img src="/images/mrx.jpg" />
+										<span id="testBox1">T</span>
+										<span id="testBox2">B</span>
+										<span id="testBox3">U</span>
+									</div>
+								</div>
+							</div>
+
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-12">
+									<div id="messageBox">
+										<h3>Message Log</h3>
+
+										<p id="message">Jonny says hiii</p>
+										<p id="message">Tan says eeeeee</p>
+										<p id="message">Jonny says hiii</p>
+										<p id="message">Tan says eeeeee</p>
+										<p id="message">Jonny says hiii</p>
+										<p id="message">Tan says eeeeee</p>
+										<p id="message">Jonny says hiii</p>
+										<p id="message">Tan says eeeeee</p>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -63,7 +170,7 @@
 			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
 			crossorigin="anonymous"
 		></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="/js/map.js"></script>
 	</body>
 </html>

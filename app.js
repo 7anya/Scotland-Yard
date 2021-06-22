@@ -331,4 +331,23 @@ io.on('connection', (socket) => {
 		data = data.split('@');
 		game.makeMove(player, data[0], data[1]);
 	}
+	function generateStartPositions() {
+		// Generates a array of size 6 with random starting positions for all 6 players.
+		// works by making a array of [1:198] and shuffling it and taking first 6 elements
+		var array = [];
+		var startPositions = [];
+		for (var i = 1; i <= 198; i++) {
+			array[i - 1] = i;
+		}
+		for (var i = array.length - 1; i > 0; i--) {
+			var j = Math.floor(Math.random() * (i + 1));
+			var temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		for (var i = 0; i < 6; i++) {
+			startPositions.push(array[i]);
+		}
+		return startPositions;
+	}
 });
