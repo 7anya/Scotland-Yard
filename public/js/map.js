@@ -201,11 +201,16 @@ var st =
 	'198 657 754\n' +
 	'199 806 767';
 window.onload = (event) => {
+	setPoints(100);
+};
+
+function setPoints(zoom) {
 	var arr = st.split('\n');
 	var scroll_zoom = new ScrollZoom($('#main'), 4, 0.5);
 
 	for (var i = 2; i < arr.length; i++) {
 		var newArr = arr[i].split(' ');
+		$('#point_' + i.toString()).remove();
 
 		// top: 37px;
 		// left: 80px;
@@ -216,8 +221,12 @@ window.onload = (event) => {
 
 		let insideDiv = document.createElement('div');
 		insideDiv.classList.add('insideDiv');
-		insideDiv.style.top = newArr[2] - 15;
-		insideDiv.style.left = newArr[1] - 14;
+		insideDiv.style.width = '' + (30 * zoom) / 100 + 'px';
+		insideDiv.style.height = '' + (30 * zoom) / 100 + 'px';
+		insideDiv.style.borderRadius = '' + (15 * zoom) / 100 + 'px';
+		insideDiv.style.borderWidth = '' + (5 * zoom) / 100 + 'px';
+		insideDiv.style.top = ((newArr[2] - 15) * zoom) / 100;
+		insideDiv.style.left = ((newArr[1] - 14) * zoom) / 100;
 		var newI = i - 1;
 		insideDiv.id = 'point_' + newI.toString();
 		insideDiv.onclick = function () {
@@ -229,7 +238,7 @@ window.onload = (event) => {
 
 	var socket = io.connect();
 
-	socket.on('ping', function (data) {
+	socket.on('yee', function (data) {
 		alert('Server says eeeeee');
 		socket.emit('pong', 'eeeeee');
 	});
@@ -237,7 +246,7 @@ window.onload = (event) => {
 	socket.on('alert', function (data) {
 		alert(data);
 	});
-};
+}
 
 function ScrollZoom(container, max_scale, factor) {
 	var target = container.children().first();
@@ -301,11 +310,22 @@ function ScrollZoom(container, max_scale, factor) {
 
 function handleClick(cb) {
 	if (cb.checked) {
-		$('#messageBox').show();
+		$('#logBox').show();
 		$('#mrxBoard').hide();
 	} else {
-		$('#messageBox').hide();
+		$('#logBox').hide();
 		$('#mrxBoard').show();
 	}
 	//console.log('Clicked, new value = ' + cb.checked);
+}
+
+function handleZoom(event) {
+	event.preventDefault();
+	var zoom = parseInt($('#inputZoom')[0].value);
+	console.log(zoom);
+	var width = (zoom * 1018) / 100;
+	var height = (zoom * 809) / 100;
+	$('#mainDiv').css('width', width.toString() + 'px');
+	$('#mainDiv').css('height', height.toString() + 'px');
+	setPoints(zoom);
 }

@@ -10,7 +10,7 @@
 			integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
 			crossorigin="anonymous"
 		/>
-		<title>Document</title>
+		<title>Scotland Yard</title>
 	</head>
 	<body>
 		<div style="display: flex">
@@ -109,7 +109,7 @@
 										<label
 											class="form-check-label"
 											for="flexSwitchCheckChecked"
-											>Message Logs</label
+											>Players Log</label
 										>
 									</div>
 								</div>
@@ -125,9 +125,10 @@
 								<div class="col-md-auto">
 									<div id="mrxBoard">
 										<img src="/images/mrx.jpg" />
-										<span id="testBox1">T</span>
-										<span id="testBox2">B</span>
-										<span id="testBox3">U</span>
+										<img
+											id="testImg"
+											src="/images/bus3.png"
+										/>
 									</div>
 								</div>
 							</div>
@@ -140,18 +141,83 @@
 								"
 							>
 								<div class="col-md-12">
-									<div id="messageBox">
-										<h3>Message Log</h3>
-
-										<p id="message">Jonny says hiii</p>
-										<p id="message">Tan says eeeeee</p>
-										<p id="message">Jonny says hiii</p>
-										<p id="message">Tan says eeeeee</p>
-										<p id="message">Jonny says hiii</p>
-										<p id="message">Tan says eeeeee</p>
-										<p id="message">Jonny says hiii</p>
-										<p id="message">Tan says eeeeee</p>
+									<div id="logBox">
+										<table
+											class="
+												table table-striped table-dark
+											"
+										>
+											<thead>
+												<tr>
+													<th scope="col">#</th>
+													<th scope="col">P1</th>
+													<th scope="col">P2</th>
+													<th scope="col">P3</th>
+													<th scope="col">Mr.X</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>1</td>
+													<td>5</td>
+													<td>7</td>
+													<td>X</td>
+												</tr>
+												<tr>
+													<th scope="row">2</th>
+													<td>2</td>
+													<td>3</td>
+													<td>9</td>
+													<td>X</td>
+												</tr>
+												<tr>
+													<th scope="row">3</th>
+													<td>10</td>
+													<td>21</td>
+													<td>199</td>
+													<td>35</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
+								</div>
+							</div>
+
+							<div
+								class="
+									row
+									align-items-center
+									justify-content-md-center
+								"
+							>
+								<div class="col-md-auto">
+									<form
+										class="
+											row row-cols-lg-auto
+											g-3
+											align-items-center
+										"
+										style="margin-top: 20px"
+									>
+										<div class="col-12">
+											<input
+												type="number"
+												id="inputZoom"
+												placeholder="Zoom"
+												class="form-control"
+											/>
+										</div>
+										<div class="col-12">
+											<button
+												type="submit"
+												class="btn btn-primary"
+												onclick="handleZoom(event);"
+											>
+												Apply Zoom
+											</button>
+										</div>
+									</form>
 								</div>
 							</div>
 						</div>

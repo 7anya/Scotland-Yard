@@ -25,229 +25,14 @@ const io = socketio(server);
 
 const games = new Map();
 
-class Move {
-	constructor(to, ticket) {
-		this.to = to;
-		this.ticket = ticket;
-	}
-}
-
-class Player {
-	constructor(userID, name, socket) {
-		this.userID = userID;
-		this.name = name;
-		this.socket = socket;
-
-		// Game related variables
-		this.isMrX = false;
-		this.taxi = 10;
-		this.bus = 8;
-		this.underground = 4;
-		this.doubleMove = 0;
-		this.black = 0;
-		this.moves = [];
-	}
-	setAsMrX(totalPlayers) {
-		this.taxi = 4;
-		this.bus = 3;
-		this.underground = 3;
-		this.doubleMove = 4; //Reduces by 2 everytime (so effectively 2 tickets
-		this.black = totalPlayers - 1;
-		this.isMrX = true;
-	}
-
-	checkTicketAvailability(ticket, limit) {
-		switch (ticket) {
-			case 'T':
-				if (this.taxi > limit) return true;
-
-			case 'B':
-				if (this.bus > limit) return true;
-
-			case 'U':
-				if (this.underground > limit) return true;
-
-			case 'BL':
-				if (this.black > limit) return true;
-
-			case 'N':
-				return true;
-			default:
-				if (/^2_([TBU]|BL)_([TBU]|BL)$/.test(ticket)) {
-					tickets = ticket.split('_');
-					if (player.doubleMove > 0) {
-						if (tickets[1] == tickets[2]) {
-							return this.checkTicketAvailability(tickets[1], 1);
-						}
-						return (
-							this.checkTicketAvailability(tickets[1], 0) &&
-							this.checkTicketAvailability(tickets[2], 0)
-						);
-					}
-					return false;
-				}
-				this.socket.emit(
-					'alert',
-					'Did you just try to hack and cheat? Bad hooman :(' //hehe nice
-				);
-		}
-	}
-
-	checkMoveAvailability(ticket, location) {
-		if (location == 'N') return true;
-		lastLocation = this.moves[this.moves.length - 1].to;
-		if (
-			map[lastLocation].has(location) &&
-			(ticket == 'BL' || map[lastLocation][location].includes(ticket))
-		)
-			return true;
-		return false;
-	}
-
-	makeMove(ticket, location, mrx, gameID, isDouble) {
-		switch (ticket) {
-			case 'T':
-				this.taxi--;
-				if (!this.isMrX) mrx.taxi++;
-				break;
-			case 'B':
-				this.bus--;
-				if (!this.isMrX) mrx.bus++;
-				break;
-			case 'U':
-				this.underground--;
-				if (!this.isMrX) mrx.underground++;
-				break;
-			case 'BL':
-				this.black--;
-				break;
-		}
-		if (isDouble) this.doubleMove--;
-		this.moves.push(new Move(location, (isDouble ? '2' : '') + ticket));
-
-		if (this.isMrX) {
-			length = this.moves.length;
-			if (
-				length == 3 ||
-				length == 8 ||
-				length == 13 ||
-				length == 18 ||
-				length == 24
-			) {
-				io.to(gameID).emit('MrX_reveal', this.moves);
-			}
-			arr = [];
-			this.moves.forEach((move) => arr.push(move.ticket));
-			io.to(gameID).emit('MrX_moves', arr);
-		} else {
-			io.to(gameID).emit('player_moves', this);
-		}
-	}
-}
-
-class Game {
-	constructor(gameID) {
-		// Global variables
-		// Connection variables
-		this.gameID = gameID;
-
-		// Game variables
-		this.players = []; // Stores player class instances of all players in the game
-		this.mrx = NULL; // This is mrx for the session (array index of the player)
-		this.active = false;
-		this.turn = -1;
-	}
-	join(player, socket) {
-		arr = {};
-		this.players.forEach((player) => (arr[player.userID] = player.name));
-		this.players.push(player);
-		io.to(this.gameID).emit('new_player', arr);
-	}
-	start(player) {
-		if (this.mrx == NULL) {
-			player.socket.emit(
-				'alert',
-				'There is no Mr.X to catch! Ask someone to become Mr.X before starting the game'
-			);
-		} else {
-			this.players[this.mrx].setAsMrX(this.players.length);
-			this.turn = this.mrx;
-			this.active = true;
-		}
-		io.to(this.gameID).emit('alert', 'The game is under way!');
-	}
-	setMrX(player) {
-		if (this.mrx == NULL) {
-			this.mrx = this.players.findIndex((element) => element == player);
-		} else {
-			socket.emit('alert', 'Someone is already Mr.X!');
-		}
-	}
-	
-	checkIfPositionOccupied(location) {
-		players.forEach( (player) => {
-			if(player.isMrX) continue;
-			if(player.moves[player.moves.length - 1].to == location) return true;
-		});
-		return false;
-	}
-
-	makeMove(player, location, ticket) {
-		can_move = false;
-		can_move = player.checkTicketAvailability(ticket, 0);
-		tickets = ticket.split('_');
-		locations = location.split('_');
-		if (tickets.length == 3 && locations.length == 2) {
-			can_move =
-				can_move &&
-				player.checkMoveAvailability(ticket[1], location[0]);
-			can_move =
-				can_move &&
-				player.checkMoveAvailability(ticket[2], location[1]);
-		} else {
-			can_move =
-				can_move && player.checkMoveAvailability(ticket, location);
-		}
-		if (can_move) {
-			if (tickets.length == 1 && !checkIfPositionOccupied(location)) {
-				player.makeMove(
-					ticket,
-					location,
-					this.players[this.mrx],
-					this.gameID,
-					false
-				);
-			} else if (!checkIfPositionOccupied(locations[0]) && !checkIfPositionOccupied(locations[1])) {
-				player.makeMove(
-					tickets[1],
-					locations[0],
-					this.players[this.mrx],
-					this.gameID,
-					true
-				);
-				player.makeMove(
-					tickets[2],
-					locations[1],
-					this.players[this.mrx],
-					this.gameID,
-					true
-				);
-			} else player.socket.emit('alert', 'Cannot make move as someone else is already at that position');
-			if (
-				!player.isMrX &&
-				location ==
-					this.players[this.mrx].moves[
-						this.players[this.mrx].moves.length - 1
-					].to
-			) {
-				io.to(gameID).emit('alert', player.name + ' caught Mr.X!');
-				// TODO emit all moves of Mr.X on channel 'finish'
-			}
-		}
-	}
-}
+const Move = require('./classes/Move');
+const Player = require('./classes/Player');
+const Game = require('./classes/Game');
+const Test = require('./classes/Test');
 
 io.on('connection', (socket) => {
+	// test = new Test();
+	// test.emit(socket);
 	console.log('New user connected');
 	// socket.on("ping", (data)=>{
 	// console.log(data);
@@ -262,16 +47,15 @@ io.on('connection', (socket) => {
 		socket
 	);
 
+	var game = null;
+
+	socket.emit('welcome', player.userID);
+
 	socket.on('new_game', () => createNewGame());
-	socket.on('join_game', (data) => {
-		data = data.split('_');
-		joinGame(data[0], data[1]);
-	});
-	socket.on('start_game', (data) => startGame(data));
-	socket.on('become_MrX', (data) => {
-		data = data.split('_');
-		becomeMrX(data[0], data[1]);
-	});
+	socket.on('join_game', (gameID) => joinGame(gameID));
+	socket.on('become_MrX', () => becomeMrX());
+	socket.on('start_game', () => startGame());
+	socket.on('make_move', (data) => makeMove(data));
 
 	function makeID(length) {
 		var result = '';
@@ -290,7 +74,7 @@ io.on('connection', (socket) => {
 		gameID = Math.floor(Math.random() * 1000000000).toString();
 		games.set(gameID, new Game(gameID));
 		game = games.get(gameID);
-		game.join(player, socket);
+		game.join(player);
 
 		socket.join(gameID);
 		socket.emit('new_game', gameID);
@@ -309,7 +93,7 @@ io.on('connection', (socket) => {
 				'Sorry, the game is already under way. You cannot join in this round'
 			);
 		} else {
-			socket.join(gameID, socket);
+			socket.join(gameID);
 			game.join(player);
 			socket.emit(
 				'alert',
@@ -318,8 +102,9 @@ io.on('connection', (socket) => {
 		}
 	}
 
-	function startGame(gameID) {
-		game = games.get(gameID);
+	function startGame() {
+		if (game == null)
+			socket.emit('alert', 'You think you can hack into this game, eh?');
 		if (game.players.length < 4) {
 			socket.emit(
 				'alert',
@@ -330,33 +115,17 @@ io.on('connection', (socket) => {
 		}
 	}
 
-	function becomeMrX(gameID) {
-		game = games.get(gameID);
+	function becomeMrX() {
+		if (game == null)
+			socket.emit(
+				'alert',
+				'Stop sending requests without proper flow, you neophyte!'
+			);
 		game.setMrX(player);
 	}
 
-	function makeMove(gameID, data) {
-		game = games.get(gameID);
+	function makeMove(data) {
 		data = data.split('@');
 		game.makeMove(player, data[0], data[1]);
-	}
-	function generateStartPositions() {
-		// Generates a array of size 6 with random starting positions for all 6 players.
-		// works by making a array of [1:198] and shuffling it and taking first 6 elements
-		var array = [];
-		var startPositions = [];
-		for (var i = 1; i <= 198; i++) {
-			array[i - 1] = i;
-		}
-		for (var i = array.length - 1; i > 0; i--) {
-			var j = Math.floor(Math.random() * (i + 1));
-			var temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
-		}
-		for (var i = 0; i < 6; i++) {
-			startPositions.push(array[i]);
-		}
-		return startPositions;
 	}
 });

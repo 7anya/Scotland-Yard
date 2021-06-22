@@ -1,6 +1,7 @@
 #mainDiv {
 	background-image: url('/images/map.jpg');
 	background-repeat: no-repeat;
+	background-size: cover;
 	width: 1018px;
 	height: 809px;
 	position: relative;
@@ -9,22 +10,17 @@
 
 .insideDiv {
 	position: absolute;
-	width: 30px;
-	height: 30px;
 	border: 5px solid;
 	border-color: transparent;
-	border-radius: 15px;
 }
 
-#messageBox {
+#logBox {
 	border: 3px solid;
 	border-color: #0275d8;
 	border-radius: 5px;
 	width: 100%;
 	padding: 20px;
 	margin-top: 30px;
-	max-height: 396px;
-	overflow: scroll;
 }
 
 #message {
@@ -75,6 +71,14 @@
 	flex: 1;
 }
 
+#testImg {
+	position: absolute;
+	top: 13px;
+	left: 47px;
+}
+
 body {
 	margin: 0;
+	background-color: #121212 !important;
+	color: white !important;
 }
