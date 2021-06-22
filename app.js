@@ -51,7 +51,7 @@ class Player {
 		this.taxi = 4;
 		this.bus = 3;
 		this.underground = 3;
-		this.doubleMove = 2;
+		this.doubleMove = 4; //Reduces by 2 everytime (so effectively 2 tickets
 		this.black = totalPlayers - 1;
 		this.isMrX = true;
 	}
@@ -98,7 +98,7 @@ class Player {
 		lastLocation = this.moves[this.moves.length - 1].to;
 		if (
 			map[lastLocation].has(location) &&
-			map[lastLocation][location].includes(ticket)
+			(ticket == 'BL' || map[lastLocation][location].includes(ticket))
 		)
 			return true;
 		return false;
@@ -122,6 +122,7 @@ class Player {
 				this.black--;
 				break;
 		}
+		if (isDouble) this.doubleMove--;
 		this.moves.push(new Move(location, (isDouble ? '2' : '') + ticket));
 
 		if (this.isMrX) {
