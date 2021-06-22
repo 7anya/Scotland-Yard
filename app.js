@@ -183,6 +183,14 @@ class Game {
 			socket.emit('alert', 'Someone is already Mr.X!');
 		}
 	}
+	
+	checkIfPositionOccupied(location) {
+		players.forEach( (player) => {
+			if(player.isMrX) continue;
+			if(player.moves[player.moves.length - 1].to == location) return true;
+		});
+		return false;
+	}
 
 	makeMove(player, location, ticket) {
 		can_move = false;
@@ -201,7 +209,7 @@ class Game {
 				can_move && player.checkMoveAvailability(ticket, location);
 		}
 		if (can_move) {
-			if (tickets.length == 1) {
+			if (tickets.length == 1 && !checkIfPositionOccupied(location)) {
 				player.makeMove(
 					ticket,
 					location,
@@ -209,22 +217,22 @@ class Game {
 					this.gameID,
 					false
 				);
-			} else {
+			} else if (!checkIfPositionOccupied(locations[0]) && !checkIfPositionOccupied(locations[1])) {
 				player.makeMove(
-					ticket[1],
-					location[0],
+					tickets[1],
+					locations[0],
 					this.players[this.mrx],
 					this.gameID,
 					true
 				);
 				player.makeMove(
-					ticket[2],
-					location[1],
+					tickets[2],
+					locations[1],
 					this.players[this.mrx],
 					this.gameID,
 					true
 				);
-			}
+			} else player.socket.emit('alert', 'Cannot make move as someone else is already at that position');
 			if (
 				!player.isMrX &&
 				location ==
