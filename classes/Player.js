@@ -1,9 +1,10 @@
 module.exports = class Player {
-	constructor(userID, name, socket) {
+	constructor(userID, name, socket, io) {
 		this.userID = userID;
 		this.name = name;
 		this.socket = socket;
-		this.color = null;
+		this.color = undefined;
+		this.io = io;
 
 		// Game related variables
 		this.isMrX = false;
@@ -101,11 +102,13 @@ module.exports = class Player {
 				length == 18 ||
 				length == 24
 			) {
-				io.to(gameID).emit('MrX_reveal', location);
+				this.io.to(gameID).emit('MrX_reveal', location);
 			}
-			io.to(gameID).emit('MrX_moves', ticket);
+			this.io.to(gameID).emit('MrX_moves', ticket);
 		} else {
-			io.to(gameID).emit('detective_moves', this.userID + '_' + location);
+			this.io
+				.to(gameID)
+				.emit('detective_moves', this.userID + '_' + location);
 		}
 	}
 };

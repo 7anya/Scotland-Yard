@@ -42,12 +42,13 @@ io.on('connection', (socket) => {
 
 	//io.to('some room').emit('some event');
 	player = new Player(
-		makeID(),
+		makeID(10),
 		'Player_' + Math.floor(Math.random() * 10),
-		socket
+		socket,
+		io
 	);
 
-	var game = null;
+	var game = undefined;
 
 	socket.emit('welcome', player.userID);
 
@@ -72,17 +73,19 @@ io.on('connection', (socket) => {
 
 	function createNewGame() {
 		gameID = Math.floor(Math.random() * 1000000000).toString();
-		games.set(gameID, new Game(gameID));
+		socket.join(gameID);
+		games.set(gameID, new Game(gameID, io));
 		game = games.get(gameID);
 		game.join(player);
-
-		socket.join(gameID);
+		console.log(gameID);
 		socket.emit('new_game', gameID);
 	}
 
 	function joinGame(gameID) {
 		game = games.get(gameID);
-		if (game.players.length >= 6) {
+		if (!game) {
+			socket.emit('alert', 'Sorry, Game ID incorrect');
+		} else if (game.players.length >= 6) {
 			socket.emit(
 				'alert',
 				'Sorry, no more players allowed (max capacity: 6)'
@@ -103,7 +106,7 @@ io.on('connection', (socket) => {
 	}
 
 	function startGame() {
-		if (game == null)
+		if (game == undefined)
 			socket.emit('alert', 'You think you can hack into this game, eh?');
 		if (game.players.length < 4) {
 			socket.emit(
@@ -116,7 +119,7 @@ io.on('connection', (socket) => {
 	}
 
 	function becomeMrX() {
-		if (game == null)
+		if (game == undefined)
 			socket.emit(
 				'alert',
 				'Stop sending requests without proper flow, you neophyte!'

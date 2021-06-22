@@ -1,3 +1,5 @@
+const Move = require('./Move');
+
 module.exports = class Game {
 	generateStartPositions() {
 		// Generates a array of size 6 with random starting positions for all 6 players.
@@ -19,14 +21,15 @@ module.exports = class Game {
 		return startPositions;
 	}
 
-	constructor(gameID) {
+	constructor(gameID, io) {
 		// Global variables
 		// Connection variables
 		this.gameID = gameID;
+		this.io = io;
 
 		// Game variables
 		this.players = []; // Stores player class instances of all players in the game
-		this.mrx = null; // This is mrx for the session (array index of the player)
+		this.mrx = undefined; // This is mrx for the session (array index of the player)
 		this.active = false;
 		this.startPositions = this.generateStartPositions();
 		this.colors = [
@@ -43,16 +46,17 @@ module.exports = class Game {
 		player.moves.push(new Move(this.startPositions.pop(), 'N'));
 		player.color = this.colors.pop();
 		this.players.push(player);
-		playersObj = {};
+		let playersObj = {};
 		this.players.forEach((player) => {
 			playersObj[player.userID] = {};
 			playersObj[player.userID]['name'] = player.name;
 			playersObj[player.userID]['color'] = player.color;
 		});
-		io.to(this.gameID).emit('new_player', playersObj);
+		playersObj['gameID'] = this.gameID;
+		this.io.to(this.gameID).emit('new_player', playersObj);
 	}
 	start(player) {
-		if (this.mrx == null) {
+		if (this.mrx == undefined) {
 			player.socket.emit(
 				'alert',
 				'There is no Mr.X to catch! Ask someone to become Mr.X before starting the game'
@@ -62,16 +66,16 @@ module.exports = class Game {
 			this.turn = this.mrx;
 			this.active = true;
 		}
-		io.to(this.gameID).emit(
+		this.io.to(this.gameID).emit(
 			'alert',
 			'The game is under way! Mr.X goes first'
 		);
 		this.players[this.mrx].socket.emit('your_turn', 'true');
 	}
 	setMrX(player) {
-		if (this.mrx == null) {
+		if (this.mrx == undefined) {
 			this.mrx = this.players.findIndex((element) => element == player);
-			io.to(gameID).emit('set_MrX', player.userID);
+			this.io.to(gameID).emit('set_MrX', player.userID);
 		} else {
 			socket.emit('alert', 'Someone is already Mr.X!');
 		}
@@ -136,7 +140,7 @@ module.exports = class Game {
 						this.players[this.mrx].moves.length - 1
 					].to
 			) {
-				io.to(gameID).emit('alert', player.name + ' caught Mr.X!');
+				this.io.to(gameID).emit('alert', player.name + ' caught Mr.X!');
 				// TODO emit all moves of Mr.X on channel 'finish'
 			}
 			this.turn = (this.turn + 1) % this.players.length;

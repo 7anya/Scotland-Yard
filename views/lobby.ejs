@@ -1,0 +1,61 @@
+<div id="lobby">
+	<div class="row align-items-center justify-content-md-center">
+		<div class="col-md-auto">
+			<h3 id="gameIDHeading">Game ID: sample_game_id</h3>
+		</div>
+	</div>
+
+	<div class="row align-items-center justify-content-md-center">
+		<div class="col-md-auto">
+			<p>Waiting for players to join and start...</p>
+		</div>
+	</div>
+
+	<div
+		class="row align-items-center justify-content-md-center"
+		style="margin-top: 20px"
+	>
+		<div class="col-md-auto">
+			<button
+				type="submit"
+				id="becomeMrxButton"
+				class="btn btn-primary"
+				onclick="handleBecomeMrx(event);"
+			>
+				Become Mr. X
+			</button>
+		</div>
+	</div>
+
+	<div class="row align-items-center justify-content-md-center">
+		<div class="col-md-12">
+			<div id="playerList">
+				<table class="table table-striped table-dark">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Player's Joined</th>
+						</tr>
+					</thead>
+					<tbody id="playerListBody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="row align-items-center justify-content-md-center"
+		style="margin-top: 20px"
+	>
+		<div class="col-md-auto">
+			<button
+				type="submit"
+				id="startGameButton"
+				class="btn btn-primary"
+				onclick="handleStartGame(event);"
+			>
+				Start the Game
+			</button>
+		</div>
+	</div>
+</div>

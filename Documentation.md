@@ -38,7 +38,7 @@ _NOTE: Where not specified, data will be ignored. Also, the event names are case
 
 ### new_player:
 
--   **server -> client:** Inform all users of a new player. Data contains a json Object of the format: `{"playerID1": {'name': 'someName', 'color': 'someHex'}, 'playerID2' :{...}}`
+-   **server -> client:** Inform all users of a new player. Data contains a json Object of the format: `{"gameID":'Some game ID', "playerID1": {'name': 'someName', 'color': 'someHex'}, 'playerID2' :{...}}`
     -   _Note: All players are sent out every time someone joins. This is so that even the new player gets a list of all players. You will also receive your own self in that list._
 
 ### your_turn:

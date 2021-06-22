@@ -235,17 +235,6 @@ function setPoints(zoom) {
 
 		document.querySelector('#mainDiv').appendChild(insideDiv);
 	}
-
-	var socket = io.connect();
-
-	socket.on('yee', function (data) {
-		alert('Server says eeeeee');
-		socket.emit('pong', 'eeeeee');
-	});
-
-	socket.on('alert', function (data) {
-		alert(data);
-	});
 }
 
 function ScrollZoom(container, max_scale, factor) {
